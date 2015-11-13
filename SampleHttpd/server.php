@@ -1,6 +1,10 @@
 <?php
 namespace SampleHttpd;
 
+use SampleHttpd\Httpd as Httpd;
+
+require_once('httpd/parse.php');
+
 // CONFIGURATION
 $conf = array(
     'LISTEN_PORT' => 9999,
@@ -26,10 +30,19 @@ while (true) {
             break;
         }
     }
+    // create parser
+    $parse = new Httpd\RequrstParser($data);
+    $parse->parse();
+
+    // DEBUG
+    print_r($parse->method());
+    print_r($parse->headers());
+    print "--- BODY---\n";
+    echo $parse->Body();
+    print "--- BODY---\n";
+    
     // CLOSE SOCKET
     socket_close($clientsock);
-    // ECHO current session Data
-    echo $data;
 }
 
 exit;
